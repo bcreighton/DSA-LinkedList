@@ -9,7 +9,7 @@ class LinkedList {
         this.head = new _Node(item, this.head);
     }
 
-    instertBefore(item, value) {
+    insertBefore(item, value) {
         if (!this.head) {
             this.insertFirst(item); // inserts item at the head if list is empty
         }
@@ -26,7 +26,7 @@ class LinkedList {
         }
     }
 
-    instertAfter(item, value) {
+    insertAfter(item, value) {
         if (!this.head) {
             this.insertFirst(item); // inserts item at the head if list is empty
         }
@@ -223,32 +223,92 @@ const reverse = (linkedList) => {
     // isEmpty(linkedList);
 
     const ll = linkedList;
-    let origHead = ll.head
-    let currentItem = ll.head;
-    let previousItem;
-
-    while( currentItem.next !== null ) {
-        previousItem = currentItem;
-        currentItem = currentItem.next;
-    }
-
-    previousItem = findPrevious(currentItem.value, ll);
-    currentItem.next = previousItem;
-    currentItem = previousItem;
-
-    while (currentItem.next !== null ) {
-        debugger;
-        previousItem = findPrevious(currentItem.value, ll);
-        currentItem.next = previousItem;
-        currentItem = previousItem;
-    }
     
-    return ll;
+    let previousNode = null;
+
+    while (ll.head != null) {
+        let nextNode = ll.head.next;
+        ll.head.next = previousNode;
+        previousNode = ll.head;
+        ll.head = nextNode;
+    }
+
+    return previousNode;
+}
+
+const thirdFromEnd = (linkedList) => {
+    const ll = linkedList;
+    let head = ll.head;
+    let nextNode = head.next;
+    let prevNode = null;
+
+    while ( nextNode.next != null ) {
+        prevNode = head;
+        head = nextNode;
+        nextNode = head.next;
+    }
+
+    return prevNode;
+}
+
+const middle = (linkedList) => {
+    const ll = linkedList;
+    let head = ll.head;
+    let i = 1;
+    let midNode = null;
+
+    while ( head.next != null ) {
+        head = head.next;
+        i++;
+    }
+
+    head = ll.head; //reset head
+
+    if (i % 2 !== 0) {
+        let mid = Math.floor(i/2) + 1;
+        let x = 0;
+
+        while( x < mid ) {
+            midNode = head;
+            head = head.next;
+            x++;
+        }
+        return midNode;
+    } else {
+        return 'There is no middle node';
+    }
+}
+
+const sort = (linkedList) => {
+    const ll = linkedList;
+    let head = ll.head;
+    let anchor = ll.head;
+    let holder = null;
+    let move = null;
+    
+    while ( head.next != null ) {
+        if (anchor.value > head.next.value) {
+            (head.next.next === null) ? (holder = null) : (holder = head.next.next);
+            move = head.next;
+            move.next = anchor;
+            (holder !== null) ? (anchor.next = holder) : (head.next = null);
+            anchor = move;
+            head = move.next;
+        } else {
+            head = head.next;
+        }
+    }
+
+    debugger;
+
+    return anchor;
 }
 
 const main = ()=> {
     let SLL = new LinkedList();
     let emptySLL = new LinkedList();
+    let cycleList = new LinkedList();
+    let unsortedList = new LinkedList();
 
     SLL.insertFirst('Apollo');
     SLL.insertLast('Boomer');
@@ -259,14 +319,27 @@ const main = ()=> {
     SLL.insertLast('Tauhida');
     SLL.remove('Husker');
 
-    SLL.instertBefore('Athena', 'Boomer');
-    SLL.instertAfter('Hotdog', 'Helo');
+    SLL.insertBefore('Athena', 'Boomer');
+    SLL.insertAfter('Hotdog', 'Helo');
 
     SLL.insertAt('Kat', 3);
 
     SLL.remove('Tauhida');
 
-    console.log(reverse(SLL));
+    cycleList.insertFirst(1);
+    cycleList.insertLast(2);
+    cycleList.insertLast(3);
+    cycleList.insertLast(2);
+
+    unsortedList.insertFirst(3);
+    unsortedList.insertLast(2);
+    unsortedList.insertLast(5);
+    unsortedList.insertLast(7);
+    unsortedList.insertLast(1);
+
+
+
+    console.log(sort(unsortedList));
 }
 
 main();
